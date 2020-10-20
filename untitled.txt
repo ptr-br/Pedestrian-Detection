@@ -1,0 +1,41 @@
+gute Ped size height 275 width 100 with a stride size of 50
+
+A connection to the Jupyter server could not be established. JupyterLab will continue trying to reconnect. Check your network connection or Jupyter server configuration.
+
+
+6 epochs iou0.3
+
+Epoch 0/5
+----------
+train Loss: 0.4536 Acc: 0.7742
+val Loss: 0.3175 Acc: 0.8783
+
+Epoch 1/5
+----------
+train Loss: 0.3149 Acc: 0.8659
+val Loss: 0.2416 Acc: 0.9050
+
+Epoch 2/5
+----------
+train Loss: 0.2836 Acc: 0.8797
+val Loss: 0.2356 Acc: 0.8961
+
+Epoch 3/5
+----------
+train Loss: 0.2726 Acc: 0.8807
+val Loss: 0.1981 Acc: 0.9288
+
+Epoch 4/5
+----------
+train Loss: 0.2724 Acc: 0.8797
+val Loss: 0.2310 Acc: 0.8932
+
+Epoch 5/5
+----------
+train Loss: 0.2650 Acc: 0.8876
+val Loss: 0.1951 Acc: 0.9139
+
+Training complete in 171m 55s
+Best val Acc: 0.928783
+
+===============================================

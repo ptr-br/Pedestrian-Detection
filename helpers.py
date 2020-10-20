@@ -4,7 +4,9 @@ import os
 from PIL import Image
 import numpy as np
 import cv2
+import PIL
 from matplotlib import pyplot as plt
+
 
 def display_bounding_box(image,box_coordinates, display=True, resize=(0,0),cropBox=None):
     '''
@@ -58,18 +60,20 @@ def sliding_window(image, step_w,step_h, window_size):
     Implemetation of a sliding window
 
     prarms
-        image      : Input image from which regions are created
+        image      : Input image from which regions are created (Pil-Image)
         step       : Step size that indicates how many pixel window is shifted per iteration (in x and y)
         window_size: Defines the size of the sliding window (width and height)
     
     return
-        Generator functions yields back the window 
+        Generator functions yields xmin, ymin, xmax ymax and the piece of the image
     '''
     
-    for y in range(0, image.shape[0] - window_size[1], step_h):      
-        for x in range(0, image.shape[1] - window_size[0], step_w):            
-            yield (x, y, image[y:y+window_size[1] , x:x+window_size[0] ])   # yield back current window
+    for ymin in range(0, image.size[1] - window_size[1], step_h):
+        for xmin in range(0, image.size[0] - window_size[0], step_w):   
+            yield (xmin, ymin, xmin+window_size[0], ymin+window_size[1]), image.crop((xmin, ymin, xmin+window_size[0], ymin+window_size[1]))
             
+            
+            #yield (x, y, image.crop[y:y+window_size[1] , x:x+window_size[0] ])   # yield back current window
             
             
 def image_pyramid(image, scale=1.5, minSize=(224,224)):
@@ -78,7 +82,7 @@ def image_pyramid(image, scale=1.5, minSize=(224,224)):
     Implemetation of a image pyramid
     
     prarms
-        image      : Input image from which pyramid is created
+        image      : Input image from which pyramid is created (Pil-Image)
         scale      : Scale factor (controls how much the image is resized az each iteration)
         min_size   : Defines the minimum size until the pyramide is to small 
     
@@ -92,10 +96,13 @@ def image_pyramid(image, scale=1.5, minSize=(224,224)):
     
     
     while True:      
-        w = int(image.shape[1]/scale)      
-        image = imutils.resize(image, width=w)       
+        w = int(image.size[0]/scale)
+        h = int(image.size[1]/scale)
+        
+        image = image.resize((w,h), PIL.Image.LANCZOS)      
+        
         # if min size is reached
-        if image.shape[0] < minSize[1] or image.shape[1] < minSize[0]:
+        if image.size[0] < minSize[1] or image.size[1] < minSize[0]:
             break
             
         yield image 
@@ -108,10 +115,7 @@ def listdir_nohidden(path):
     '''
     list_dir_list= []
     for f in os.listdir(path):
-        print(f)
-        print(os.getcwd())
         if not f.startswith('.'):
-            print('JF')
             list_dir_list.append(f)
         return list_dir_list
     
@@ -134,26 +138,51 @@ def check_neg_boundingBox(boundingBox_coordinates,x_upperlLeft,y_upperLeft,boxwi
     # check if randomly created bounding box intersects with pedestrian
     for box in boundingBox_coordinates:    
         # NOTE: [0]=xmin [1]=ymin [2]=xmax [3]=ymax
-        
-        # determine the (x, y)-coordinates of the intersection rectangle
-        xA = max(box[0], x_upperlLeft)
-        yA = max(box[1], y_upperLeft)
-        xB = min(box[2], x_upperlLeft+boxwidth)
-        yB = min(box[3], y_upperLeft+boxheight)
-        # compute the area of intersection rectangle
-        intersectionArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
-        
-        if intersectionArea > 0:
+        iou = calc_iou(box,[x_upperlLeft,y_upperLeft,x_upperlLeft+boxwidth,y_upperLeft+boxheight])
+       
+        if iou > 0.45:
             return False
         
     return True
             
         
         
-        
+def calc_iou(grundTruthBox,predBox):
+    '''
+    Calculate intersection over union
+    
+    params:
+            grundTruthBox: true box coordinates of a pedestrian 
+            predBox      : predicted box for the pedestrian
+            
+    return:
+            value of the iou calculation
+    
+    '''
+    
+    # determine the (x, y)-coordinates of the intersection rectangle
+    xA = max(grundTruthBox[0], predBox[0])
+    yA = max(grundTruthBox[1], predBox[1])
+    xB = min(grundTruthBox[2], predBox[2])
+    yB = min(grundTruthBox[3], predBox[3])
+    
+     #compute the area of intersection rectangle
+    intersectionArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
+    
+    
+    # compute the area of both the prediction and ground-truth
+    # rectangles
+    boxGTArea   = (grundTruthBox[2] - grundTruthBox[0] + 1) * (grundTruthBox[3] - grundTruthBox[1] + 1)
+    boxPredArea = (predBox[2] - predBox[0] + 1) * (predBox[3] - predBox[1] + 1)
+    
+    # compute iou
+    iou = intersectionArea / float(boxGTArea + boxPredArea - intersectionArea)
+    
+    return iou
 
-        
-        
+
+    
+    
         
         
         
