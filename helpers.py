@@ -30,8 +30,11 @@ def display_bounding_box(image,box_coordinates, display=True, resize=(0,0),cropB
     # resize the input image as well as the corresponding bounding boxes to a fixed width
     if resize[0]!=0:
         originalShape = image.shape
-        #image = imutils.resize(image, width=resize[0])  <-- keeps original image ratio 
-        image = cv2.resize(image, resize, interpolation = cv2.INTER_AREA)
+        # of second value is 0 keep original aspect ratio
+        if resize[1] == 0:
+            image = imutils.resize(image, width=resize[0]) 
+        else:
+            image = cv2.resize(image, resize, interpolation = cv2.INTER_AREA)
         newShape = image.shape
         new_coord = lambda bc,oS,nS: bc*nS[0]/oS[0]
         box_coordinates = new_coord(bc=box_coordinates,oS=originalShape,nS=newShape)
@@ -40,16 +43,16 @@ def display_bounding_box(image,box_coordinates, display=True, resize=(0,0),cropB
     for (xmin,ymin,xmax,ymax) in box_coordinates:
         # draw a rectangle around each detected person
         cv2.rectangle(image,(int(xmin),int(ymin)),(int(xmax),int(ymax)),(255,0,0),2) 
-        
+    
+    # draw a blue rectangle around the box that should be cropped out
     if cropBox != None:
-        # draw a blue rectangle around the box that should be cropped out
         xmin, ymin, xmax, ymax = cropBox
         cv2.rectangle(image,(int(xmin),int(ymin)),(int(xmax),int(ymax)),(0,0,255),2) 
         
 
     if display==True:                   
         # plot the image
-        fig = plt.figure(figsize=(9,9))
+        fig = plt.figure(figsize=(6,6))
         plt.imshow(image)
     else:
         return image
@@ -71,10 +74,7 @@ def sliding_window(image, step_w,step_h, window_size):
     for ymin in range(0, image.size[1] - window_size[1], step_h):
         for xmin in range(0, image.size[0] - window_size[0], step_w):   
             yield (xmin, ymin, xmin+window_size[0], ymin+window_size[1]), image.crop((xmin, ymin, xmin+window_size[0], ymin+window_size[1]))
-            
-            
-            #yield (x, y, image.crop[y:y+window_size[1] , x:x+window_size[0] ])   # yield back current window
-            
+                       
             
 def image_pyramid(image, scale=1.5, minSize=(224,224)):
    
@@ -182,10 +182,79 @@ def calc_iou(grundTruthBox,predBox):
 
 
     
+def eval_pred(image,truthBoxes, predBoxes):
+    '''
+    evaluate the predicted boxes and display them
     
+    params:
+            image     : input image
+            truthBoxes: ground truth boxes of the image
+            predBoxes: bounding boxes predicted by the classifier
+    return:
+            iou values with corresponding predBoxes
+    
+    '''
+    iouList=[]
+
+    # compute iou values of boxes
+    for gBox in truthBoxes:
+        for pBox in predBoxes:
+            iou = calc_iou(gBox,pBox)
+            if iou>0.1:
+                iouList.append((iou,pBox))
+                
+                
+    # writ iou values on image       
+    for iouValue, predBox in iouList:
+        cv2.putText(image, f"IoU: {iouValue:.2f}", (int((predBox[0]+predBox [2]-15)/2), int(predBox[1]-15)),cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 0), 2)
+    
+    # loop over ground truth boxes and draw rectangle
+    for (xmin,ymin,xmax,ymax) in truthBoxes:
+        cv2.rectangle(image,(int(xmin),int(ymin)),(int(xmax),int(ymax)),(255,0,0),2) 
+    
+    # loop over predicted boxes and draw rectangle
+    for (xmin,ymin,xmax,ymax) in predBoxes:
+        cv2.rectangle(image,(int(xmin),int(ymin)),(int(xmax),int(ymax)),(0,255,0),2) 
         
-        
-        
-        
-        
+    # plot the image
+    fig = plt.figure(figsize=(6,6))
+    plt.imshow(image)
+            
+    return iouList
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
