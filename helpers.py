@@ -202,9 +202,12 @@ def eval_pred(image,truthBoxes, predBoxes):
             iou = calc_iou(gBox,pBox)
             if iou>0.1:
                 iouList.append((iou,pBox))
+      
+    # convert to np.array
+    if isinstance(image,PIL.Image.Image):
+        image = np.array(image)
                 
-                
-    # writ iou values on image       
+    # write iou values on image       
     for iouValue, predBox in iouList:
         cv2.putText(image, f"IoU: {iouValue:.2f}", (int((predBox[0]+predBox [2]-15)/2), int(predBox[1]-15)),cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 0), 2)
     
