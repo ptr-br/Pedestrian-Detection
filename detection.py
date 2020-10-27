@@ -30,7 +30,7 @@ def prediction_transforms(roi):
         
     return roi
 
-def detect_pedestrian(image, model,slidingWindow_parameters={'height':int(275),'width':int(100),'step_w':50,'step_h':50},imagePyramid_parameters=(224,224)):
+def detect_pedestrian(image, model, verbose=True, slidingWindow_parameters={'height':int(275),'width':int(100),'step_w':50,'step_h':50},imagePyramid_parameters=(224,224),scalefactor=1.5):
     '''
     detects pedestrians ifrom a given input image 
     
@@ -39,6 +39,7 @@ def detect_pedestrian(image, model,slidingWindow_parameters={'height':int(275),'
             model: pytorch model used for prediction
             slidingWindow_parameters: Dictionary that contains information about the slliding window (height,width,step size in vertical and horizontal direction)
             imagePyramid_parameters: Tuple that contains the smallest size that the image should be scaled to
+            verbose: Bool to print out the number of roi in which a pedestrian was detected
     
     return:
             picks: bounding box coordinates from the prediction
@@ -54,7 +55,7 @@ def detect_pedestrian(image, model,slidingWindow_parameters={'height':int(275),'
     ImgWidth,imgHeight = image.size
     
     # initialize image pyramid
-    imgPyramide = image_pyramid(image,minSize=imagePyramid_parameters)
+    imgPyramide = image_pyramid(image,minSize=imagePyramid_parameters,scale=scalefactor)
     
     for img in imgPyramide:
         
@@ -110,7 +111,8 @@ def detect_pedestrian(image, model,slidingWindow_parameters={'height':int(275),'
         indexes = preds.numpy().nonzero()
        
         for index in indexes[0]:
-            print(f"Detected pedestrian at index {index}.")
+            if verbose:
+                print(f"Detected pedestrian at index {index}.")
             listOfBoundningBoxes.append(locs[index])
             listOfProbs.append(probs[index][1])
     
@@ -120,7 +122,7 @@ def detect_pedestrian(image, model,slidingWindow_parameters={'height':int(275),'
     # fairly large overlap threshold to try to maintain overlapping
     # boxes that are still people
     rects = np.array([[xmin, ymin, xmax, ymax] for (xmin, ymin, xmax, ymax) in listOfBoundningBoxes])
-    picks = non_max_suppression(rects, probs=listOfProbs, overlapThresh=0.1)
+    picks = non_max_suppression(rects, probs=listOfProbs, overlapThresh=0.2)
         
     return picks
                     

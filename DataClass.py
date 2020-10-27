@@ -1,6 +1,4 @@
-# This file is  from the "TORCHVISION OBJECT DETECTION FINETUNING TUTORIAL" adapted and contains
-# only little chnages 
-
+# This file is  from the "TORCHVISION OBJECT DETECTION FINETUNING TUTORIAL" adapted
 import os
 import numpy as np
 import torch
