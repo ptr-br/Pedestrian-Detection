@@ -12,7 +12,7 @@ For the classifier, the resnet50 architecture is adapted (feature extraction on 
 - 1. Data Exploration and Generation.ipynb - get familiar with the data and generate classifier input images
 - 2. The Classifier.ipynb - setting up and traning of the classifier
 - 3. Pedestrian Detection Pipeline.ipynb - End to end usage of the created system on examples
-- 4. Benchmark Model and Evaluation.ipynb - Setup of the benchmark model | Evaluation of both models using test images
+- 4. Benchmark Model and Evaluation.ipynb - Setup and evaluation of both models
 - DataClass.py - Contains PennFudanDataset class that is useful to load the data and work with it 
 - detection.py - Outsourced detect function of the produced model (for usage across notebooks)
 - helpers.py   - useful helper fuctions (such as sliding window, image pyramid, display bounding boxes, etc.)
