@@ -1,41 +1,3 @@
-gute Ped size height 275 width 100 with a stride size of 50
-
-
-6 epochs iou0.3 with test images for detection included
-
-Epoch 0/5
-----------
-train Loss: 0.4536 Acc: 0.7742
-val Loss: 0.3175 Acc: 0.8783
-
-Epoch 1/5
-----------
-train Loss: 0.3149 Acc: 0.8659
-val Loss: 0.2416 Acc: 0.9050
-
-Epoch 2/5
-----------
-train Loss: 0.2836 Acc: 0.8797
-val Loss: 0.2356 Acc: 0.8961
-
-Epoch 3/5
-----------
-train Loss: 0.2726 Acc: 0.8807
-val Loss: 0.1981 Acc: 0.9288
-
-Epoch 4/5
-----------
-train Loss: 0.2724 Acc: 0.8797
-val Loss: 0.2310 Acc: 0.8932
-
-Epoch 5/5
-----------
-train Loss: 0.2650 Acc: 0.8876
-val Loss: 0.1951 Acc: 0.9139
-
-Training complete in 171m 55s
-Best val Acc: 0.928783
-
 ===============================================
 Model trained for 15 epochs iou 0.45 without test images for detection 
 
@@ -131,3 +93,9 @@ Saving model trained for 15 epochs ...
 
 Training complete in 335m 48s
 Best val Acc: 0.907051
+
+train_acc = [0.7588,0.8143, 0.8303,0.8068,0.8495, 0.8730, 0.8879, 0.8890,0.8901,0.8911, 0.8933,0.8997,0.8837,0.8911, 0.8943]
+val_acc   = [0.8526,0.8878,0.6538,0.8237,0.8750,0.8974,0.8846,0.9071, 0.8846,0.8462,0.9006,0.9038, 0.7917,0.7821,0.8654]
+
+training_loss = [0.5141,0.3809,0.3922,0.3812,0.3191,0.2855,0.2760,0.2670,0.2490,0.2448,0.2533,0.2459,0.2705,0.2604,0.2524]
+val_loss =[0.3556,0.3136,0.6641,0.3856, 0.2828,0.2596, 0.2727,0.2514,0.2517,0.3141,0.2386,0.2381,0.4544,0.4685,0.2651]

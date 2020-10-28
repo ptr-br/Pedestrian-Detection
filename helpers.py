@@ -6,6 +6,7 @@ import numpy as np
 import cv2
 import PIL
 from matplotlib import pyplot as plt
+from pathlib import Path
 
 
 def display_bounding_box(image,box_coordinates, display=True, resize=(0,0),cropBox=None):
@@ -13,10 +14,10 @@ def display_bounding_box(image,box_coordinates, display=True, resize=(0,0),cropB
     Display_bounding_box is a function that draws the corresponding bounding boxes into the images
  
     params: 
-             image: Image file or patht to the image file
+             image          : Image file or patht to the image file
              box_coordinates: Coordinadtes of the bounding boxes inside the image (np-array)
-             display: Whether the image and the corrsponding bounding box should be displayed
-             resize: Tuple values to resize image to given input width
+             display        : Whether the image and the corrsponding bounding box should be displayed
+             resize         : Tuple values to resize image to given input width
     '''
     # if path is provided get image, else image is already given
     if isinstance(image, str):
@@ -182,7 +183,7 @@ def calc_iou(grundTruthBox,predBox):
 
 
     
-def eval_pred(image,truthBoxes, predBoxes):
+def eval_pred(image,truthBoxes, predBoxes,save=None,counter=-1):
     '''
     evaluate the predicted boxes and display them
     
@@ -197,18 +198,20 @@ def eval_pred(image,truthBoxes, predBoxes):
     iouList=[]
 
     # compute iou values of boxes
-    for gBox in truthBoxes:
+    for index, gBox in enumerate(truthBoxes):
         for pBox in predBoxes:
             iou = calc_iou(gBox,pBox)
-            if iou>0.1:
-                iouList.append((iou,pBox))
-      
+            if iou>0.05:     
+                # return iou value the predicted box and the index of the ground truth box for later correspondence
+                iouList.append((iou,pBox,index))
+            
+ 
     # convert to np.array
     if isinstance(image,PIL.Image.Image):
         image = np.array(image)
                 
     # write iou values on image       
-    for iouValue, predBox in iouList:
+    for iouValue, predBox, _ in iouList:
         cv2.putText(image, f"IoU: {iouValue:.2f}", (int((predBox[0]+predBox [2]-15)/2), int(predBox[1]-15)),cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 0), 2)
     
     # loop over ground truth boxes and draw rectangle
@@ -222,8 +225,20 @@ def eval_pred(image,truthBoxes, predBoxes):
     # plot the image
     fig = plt.figure(figsize=(6,6))
     plt.imshow(image)
-            
-    return iouList
+        
+    # save result sinto correct folders
+    if save =='model':
+        Path("./predImages/modelPred/").mkdir(parents=True, exist_ok=True)
+        plt.imsave(f"./predImages/modelPred/modelPred-{counter}.jpg",np.array(image))
+        
+    if save =='benchmark':
+        Path("./predImages/benchmarkPred/").mkdir(parents=True, exist_ok=True)
+        plt.imsave(f"./predImages/benchmarkPred/benchmarkPred-{counter}.jpg",np.array(image))
+        
+    iouDict={'number_pred_box':len(predBoxes),'number_truth_box':len(truthBoxes),'iouList':iouList}   
+    
+    
+    return iouDict
 
 
 
