@@ -25,7 +25,7 @@ The zip-file has to be downloaded manually.
 To unzip the files the first notebook can be used.
 
 
-#### Libraries
+### Libraries
 This project is developed in Python 3.6
 You will need install some libraries in order to run the code.  
 Libraries and respective version are:  
