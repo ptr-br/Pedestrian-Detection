@@ -1,5 +1,5 @@
 # Pedestrian-Detection
-### Introduction
+## Introduction
 
 This is the final project of the [Udacity Machine Learning Engineer Nanodegree Program](https://www.udacity.com/course/machine-learning-engineer-nanodegree--nd009t).
 
@@ -8,24 +8,24 @@ As final project i created a simple pedestrian detection system, that useses an 
 The dataset used in this project is from the [Penn-Fudan Database for Pedestrian Detection and Segmentation](https://www.cis.upenn.edu/~jshi/ped_html/).
 For the classifier, the resnet50 architecture is adapted (feature extraction on final fully conected layer).  
 
-### Included in this repository
-- 1. Data Exploration and Generation.ipynb - get familiar with the data and generate classifier input images
-- 2. The Classifier.ipynb - setting up and traning of the classifier
-- 3. Pedestrian Detection Pipeline.ipynb - End to end usage of the created system on examples
-- 4. Benchmark Model and Evaluation.ipynb - Setup and evaluation of both models
+## Included in this repository
+- Data Exploration and Generation.ipynb - get familiar with the data and generate classifier input images
+- The Classifier.ipynb - setting up and traning of the classifier
+- Pedestrian Detection Pipeline.ipynb - End to end usage of the created system on examples
+- Benchmark Model and Evaluation.ipynb - Setup and evaluation of both models
 - DataClass.py - Contains PennFudanDataset class that is useful to load the data and work with it 
 - detection.py - Outsourced detect function of the produced model (for usage across notebooks)
 - helpers.py   - useful helper fuctions (such as sliding window, image pyramid, display bounding boxes, etc.)
 - model.py     - detection model with tranined weights
 
-### Setting up the environment
+## Setting up the environment
 
-##### Dataset
+### Dataset
 The zip-file has to be downloaded manually. 
 To unzip the files the first notebook can be used.
 
 
-##### Libraries
+#### Libraries
 This project is developed in Python 3.6
 You will need install some libraries in order to run the code.  
 Libraries and respective version are:  
