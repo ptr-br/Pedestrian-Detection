@@ -27,7 +27,7 @@ To unzip the files the first notebook can be used.
 
 ### Libraries
 This project is developed in Python 3.6
-You will need install some libraries in order to run the code.  
+You will need to install some libraries in order to run the code.  
 Libraries and respective version are:  
 
 - jupyter 1.0.0
