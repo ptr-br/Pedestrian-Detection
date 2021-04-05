@@ -4,7 +4,7 @@
 This is the final project of the [Udacity Machine Learning Engineer Nanodegree Program](https://www.udacity.com/course/machine-learning-engineer-nanodegree--nd009t).
 
 
-As final project i created a simple pedestrian detection system, that useses an image classifier and a sliding window to detect pedestrians in an given input image.
+As final project, i created a simple pedestrian detection system, that useses an image classifier and a sliding window to detect pedestrians in an given input image.
 The dataset used in this project is from the [Penn-Fudan Database for Pedestrian Detection and Segmentation](https://www.cis.upenn.edu/~jshi/ped_html/).
 For the classifier, the resnet50 architecture is adapted (feature extraction on final fully conected layer).  
 
